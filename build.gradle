@@ -1,0 +1,85 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'org.asciidoctor.convert' version '1.5.8'
+    id 'java'
+    id 'war'
+}
+
+group = 'com.unbaited'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('snippetsDir', file("build/generated-snippets"))
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.session:spring-session-jdbc'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    compile 'org.apache.httpcomponents:httpclient:4.5.12'
+    compile 'org.apache.httpcomponents.client5:httpclient5-parent:5.0'
+    compile 'org.apache.httpcomponents.client5:httpclient5-fluent:5.0'
+    compile 'org.apache.httpcomponents.client5:httpclient5-cache:5.0'
+    compile 'org.apache.httpcomponents.client5:httpclient5:5.0'
+    // https://mvnrepository.com/artifact/com.google.http-client/google-http-client-jackson2
+    compile group: 'com.google.http-client', name: 'google-http-client-jackson2', version: '1.34.2'
+
+    // https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client
+    compile group: 'com.google.oauth-client', name: 'google-oauth-client', version: '1.30.6'
+    // https://mvnrepository.com/artifact/com.google.api-client/google-api-client-java6
+    compile group: 'com.google.api-client', name: 'google-api-client-java6', version: '1.30.9'
+
+    // https://mvnrepository.com/artifact/com.google.apis/google-api-services-gmail
+    compile group: 'com.google.apis', name: 'google-api-services-gmail', version: 'v1-rev110-1.25.0'
+    // https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-bom
+    compile group: 'com.google.oauth-client', name: 'google-oauth-client-bom', version: '1.30.6', ext: 'pom'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
+    // https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty
+    compile group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.30.6'
+    compile 'org.jsoup:jsoup:1.13.1'
+    // https://mvnrepository.com/artifact/org.json/json
+    compile group: 'org.json', name: 'json', version: '20190722'
+    compile([group: 'tech.blueglacier', name: 'email-mime-parser', version: '1.0.5'])
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-email
+    compile group: 'org.apache.commons', name: 'commons-email', version: '1.5'
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.30.1'
+    // https://mvnrepository.com/artifact/org.glassfish.web/javax.servlet.jsp.jstl
+    compile group: 'org.glassfish.web', name: 'javax.servlet.jsp.jstl', version: '1.2.5'
+    // https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/javax.servlet.jsp.jstl-api
+    compile group: 'javax.servlet.jsp.jstl', name: 'javax.servlet.jsp.jstl-api', version: '1.2.2'
+    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.0'
+
+
+}
+
+test {
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+}
